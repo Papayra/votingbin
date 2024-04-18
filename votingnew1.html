@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>VOTINGBIN</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="VOTINGBIN BROWSERAPP"
+  />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh; /* Set the body to take up the full viewport height */
+      display: grid;
+      grid-template-rows: auto 1fr; /* Header takes auto height, the rest is 1fr (remaining height) */
+      font-family: 'Arial', sans-serif;
+      font-size: 2vw;
+    }
+
+    header {
+      background-color: #3498db;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      padding: 20px;
+    }
+
+    .box {
+      position: relative;
+      text-align: center;
+      padding: 20px;
+      font-size: 2vw;
+      color: #fff;
+      overflow: hidden;
+    }
+    
+
+    .box1 {
+      background-color: #e74c3c; /* Red */
+    }
+
+    .box2 {
+      background-color: #2ecc71; /* Green */
+    }
+
+    .box3 {
+      background-color: #3498db; /* Blue */
+    }
+
+    .box4 {
+      background-color: #f39c12; /* Orange */
+    }
+
+    .vote-count {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      font-size: 4vw;
+    }
+
+    .bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.1); /* Slightly darker color */
+      transition: width 0.5s ease;
+      z-index: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>What house are you in?</h1>
+  </header>
+
+  <main>
+    <div class="box box1" id="box1">
+      <span class="vote-count" id="count1"></span>
+      <div class="bar" id="bar1"></div>
+      <h2>North</h2>
+    </div>
+    <div class="box box2" id="box2">
+      <span class="vote-count" id="count2"></span>
+      <div class="bar" id="bar2"></div>
+      <h2>East</h2>
+    </div>
+    <div class="box box3" id="box3">
+      <span class="vote-count" id="count3"></span>
+      <div class="bar" id="bar3"></div>
+      <h2>School</h2>
+    </div>
+    <div class="box box4" id="box4">
+      <span class="vote-count" id="count4"></span>
+      <div class="bar" id="bar4"></div>
+      <h2>West</h2>
+    </div>
+  </main>
+
+  <script>
+    var hideTimeout;
+    var num1 = 0; //counters for number of 1,2,3,4 keys pressed
+    var num2 = 0;
+    var num3 = 0;
+    var num4 = 0;
+    const polls = [["Dogs, Cats, Hampsters or Horses "]]
+    
+
+    window.onload = function() {
+      document.body.onkeyup = function(e) {
+        var ev = e || event;
+        var key = String.fromCharCode(ev.keyCode); // Convert keyCode to character
+
+        if (key === "1") {
+          console.log("The '1' key is pressed.");
+          num1++;
+          document.getElementById(`count1`).textContent = num1;
+          updateBar('bar1', num1);
+          showCounts();
+        } else if (key === "2") {
+          console.log("The '2' key is pressed.");
+          num2++;
+          document.getElementById(`count2`).textContent = num2;
+          updateBar('bar2', num2);
+          showCounts();
+        } else if (key === "3") {
+          console.log("The '3' key is pressed.");
+          num3++;
+          document.getElementById(`count3`).textContent = num3;
+          updateBar('bar3', num3);
+          showCounts();
+        } else if (key === "4") {
+          console.log("The '4' key is pressed.");
+          num4++;
+          document.getElementById(`count4`).textContent = num4;
+          updateBar('bar4', num4);
+          showCounts();
+        }
+      };
+    };
+
+    function updateBar(barId, votes) {
+      var box = document.getElementById(barId);
+      var percentage = (votes / (num1 + num2 + num3 + num4)) * 100;
+      box.style.width = percentage + "%";
+    }
+
+    function showCounts() {
+    var counts = document.querySelectorAll('.vote-count');
+    counts.forEach(function(count, index) {
+        var votes = [num1, num2, num3, num4][index];
+        count.textContent = votes;
+        count.style.display = 'block';
+    });
+    var bars = document.querySelectorAll('.bar');
+    bars.forEach(function(bar, index) {
+        var votes = [num1, num2, num3, num4][index];
+        var percentage = (votes / (num1 + num2 + num3 + num4)) * 100;
+        bar.style.width = percentage + "%";
+    });
+
+    // Clear any existing timeout and set a new one
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(function() {
+        hideCounts();
+    }, 5000);
+    }
+
+
+    function hideCounts() {
+      var counts = document.querySelectorAll('.vote-count');
+      counts.forEach(function(count) {
+        count.textContent = '';
+        count.style.display = 'none';
+      });
+
+      var bars = document.querySelectorAll('.bar');
+      bars.forEach(function(bar) {
+        bar.style.width = '0';
+      });
+    }
+  </script>
+</body>
+
+</html>
